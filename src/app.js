@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import firebase from 'firebase';
-import { Header, Button } from './components/common';
+import { Header, Button, Spinner } from './components/common';
 import LoginForm from './components/LoginForm';
 
 class App extends Component {
-  state = { loggedIn: false };
+  state = { loggedIn: null };
 
   // lifecycle method - automatically called once defined
   componentWillMount() {
@@ -26,28 +26,36 @@ class App extends Component {
       }
     });
   }
-}
+
+  renderContent() {
+    switch (this.state.loggedIn) {
+      case true:
+        return <Button>Log Out</Button>
+      case false:
+        return <LoginForm />;
+      default: 
+        return <Spinner size="large" />
+    }
 
 
-renderContent() {
-  if (this.state.loggedIn) {
+    if (this.state.loggedIn) {
+      return (
+        <Button>
+          Log out
+        </Button>
+      );
+    }
+    return <LoginForm />;
+  }
+
+  render() {
     return (
-      <Button>
-        Log out
-      </Button>
+      <View>
+        <Header headerText="Authentication" />
+        {this.renderContent()}
+      </View>
     );
   }
-   return <LoginForm />;
 }
-
-render() {
-  return (
-    <View>
-      <Header headerText="Authentication" />
-      {this.renderContent()}
-    </View>
-  );
-}
-
 
 export default App;
